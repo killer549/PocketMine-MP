@@ -146,7 +146,7 @@ abstract class Event{
 
 	private function doAsyncLoop() : void{
 		/** @var RegisteredListener $listener */
-		while(($listener = current($this->asyncQueue)) !== false and $this->pauseTimeout === null){
+		while(($listener = current($this->asyncQueue)) !== false){
 			// while has more listener and not paused
 			if($listener->getPlugin()->isEnabled()){
 				try{
@@ -162,8 +162,12 @@ abstract class Event{
 					MainLogger::getLogger()->logException($e);
 				}
 			}
+			if($this->pauseTimeout !== null){ // paused
+				break;
+			}
+			next($this->asyncQueue);
 		}
-		$this->asyncCompleteFunc = current($this->asyncQueue) === false;
+		$this->asyncComplete = current($this->asyncQueue) === false;
 	}
 
 	private function onComplete() : void{
@@ -177,7 +181,7 @@ abstract class Event{
 		$this->pauseTimeoutFunc = null;
 	}
 
-	public function pause(int $ticks = 200, ?callable $onTimeout) : void{
+	public function pause(int $ticks = 200, ?callable $onTimeout = null) : void{
 		if(!$this->async){
 			throw new \InvalidStateException("Could not pause non-async event; only events called with PluginManager->callAsyncEvent() can be paused");
 		}
@@ -194,7 +198,7 @@ abstract class Event{
 
 	public final function continue() : void{
 		if($this->pauseTimeout === null){
-			throw new \InvalidStateException("Cannot continue a paused event");
+			throw new \InvalidStateException("Cannot continue a non-paused event");
 		}
 		$this->pauseTimeout = $this->pauseTimeoutFunc = null;
 		// do not execute anything directly after this, to prevent recursion stack overflow or concurrency due to the plugin executing something after this call

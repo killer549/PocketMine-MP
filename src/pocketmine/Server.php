@@ -285,13 +285,6 @@ class Server{
 	/**
 	 * @return string
 	 */
-	public function getCodename() : string{
-		return \pocketmine\CODENAME;
-	}
-
-	/**
-	 * @return string
-	 */
 	public function getVersion() : string{
 		return ProtocolInfo::MINECRAFT_VERSION;
 	}
@@ -1586,7 +1579,6 @@ class Server{
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.info", [
 				$this->getName(),
 				($version->isDev() ? TextFormat::YELLOW : "") . $version->get(true) . TextFormat::RESET,
-				$this->getCodename(),
 				$this->getApiVersion()
 			]));
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getName()]));

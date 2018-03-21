@@ -351,9 +351,9 @@ class PluginManager{
 		foreach($versions as $version){
 			//Format: majorVersion.minorVersion.patch (3.0.0)
 			//    or: majorVersion.minorVersion.patch-devBuild (3.0.0-alpha1)
-			if($version !== $this->server->getApiVersion()){
+			if($version !== $this->server->getPocketMineVersion()){
 				$pluginApi = array_pad(explode("-", $version), 2, ""); //0 = version, 1 = suffix (optional)
-				$serverApi = array_pad(explode("-", $this->server->getApiVersion()), 2, "");
+				$serverApi = array_pad(explode("-", $this->server->getPocketMineVersion()), 2, "");
 
 				if(strtoupper($pluginApi[1]) !== strtoupper($serverApi[1])){ //Different release phase (alpha vs. beta) or phase build (alpha.1 vs alpha.2)
 					continue;

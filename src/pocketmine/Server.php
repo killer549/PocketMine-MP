@@ -292,13 +292,6 @@ class Server{
 	/**
 	 * @return string
 	 */
-	public function getApiVersion() : string{
-		return \pocketmine\API_VERSION;
-	}
-
-	/**
-	 * @return string
-	 */
 	public function getFilePath() : string{
 		return \pocketmine\PATH;
 	}
@@ -1578,8 +1571,7 @@ class Server{
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.info", [
 				$this->getName(),
-				($version->isDev() ? TextFormat::YELLOW : "") . $version->get(true) . TextFormat::RESET,
-				$this->getApiVersion()
+				($version->isDev() ? TextFormat::YELLOW : "") . $version->get(true) . TextFormat::RESET
 			]));
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getName()]));
 

@@ -63,7 +63,7 @@ class SendUsageTask extends AsyncTask{
 					"fullVersion" => $version->get(true),
 					"version" => $version->get(),
 					"build" => $version->getBuild(),
-					"api" => $server->getApiVersion(),
+					"api" => $server->getPocketMineVersion(),
 					"minecraftVersion" => $server->getVersion(),
 					"protocol" => ProtocolInfo::CURRENT_PROTOCOL
 				];

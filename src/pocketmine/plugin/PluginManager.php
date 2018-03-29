@@ -726,12 +726,11 @@ class PluginManager{
 	public function callAsyncEvent(Event $event, callable $onCompletion) : void{
 		$queue = [];
 		foreach(EventPriority::ALL as $priority){
-			foreach(HandlerList::getHandlerListsFor(get_class($event)) as $handlerList){
-				if($handlerList === null){
-					continue;
-				}
+			for($handlerList = HandlerList::getHandlerListFor(get_class($event)); $handlerList !== null; $handlerList = $handlerList->getParent()){
 				foreach($handlerList->getListenersByPriority($priority) as $registration){
-					$queue[] = $registration;
+					if($registration->getPlugin()->isEnabled()){
+						$queue[] = $registration;
+					}
 				}
 			}
 		}
@@ -740,7 +739,7 @@ class PluginManager{
 		}
 		$event->setAsyncQueue($queue, $onCompletion);
 		$event->startAsyncQueue($this->server->getTick());
-		if(!$event->isAsyncComplete()){
+		if($event->isAsync()){ // returns false if the event execution has completed
 			assert(!isset($this->pausedEvents[spl_object_hash($event)]));
 			$this->pausedEvents[spl_object_hash($event)] = $event; // we do not allow duplicate events
 		}

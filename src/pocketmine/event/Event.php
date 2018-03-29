@@ -217,9 +217,6 @@ abstract class Event{
 	 * @return bool
 	 */
 	public final function isAsyncComplete() : bool{
-		if(!$this->async){
-			throw new \InvalidStateException("isAsyncComplete() is only available for events called asynchronously");
-		}
 		return $this->asyncComplete;
 	}
 }

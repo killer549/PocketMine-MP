@@ -31,6 +31,7 @@ use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 
 abstract class Event{
+	public const MAX_PAUSE_TICKS = 6000;
 
 	/** @var string|null */
 	protected $eventName = null;
@@ -92,13 +93,13 @@ abstract class Event{
 	 * @param RegisteredListener[] $asyncQueue
 	 * @param callable             $onCompletion
 	 */
-	public final function setAsyncQueue(array $asyncQueue, callable $onCompletion) : void{
+	final public function setAsyncQueue(array $asyncQueue, callable $onCompletion) : void{
 		$this->async = true;
 		$this->asyncQueue = $asyncQueue;
 		$this->asyncCompleteFunc = $onCompletion;
 	}
 
-	public final function isAsync() : bool{
+	final public function isAsync() : bool{
 		return $this->async;
 	}
 
@@ -107,7 +108,7 @@ abstract class Event{
 	 *
 	 * @param int $currentTick
 	 */
-	public final function startAsyncQueue(int $currentTick) : void{
+	final public function startAsyncQueue(int $currentTick) : void{
 		if(!$this->async){
 			throw new \InvalidStateException("Could not start async queue on a non-async event");
 		}
@@ -122,7 +123,7 @@ abstract class Event{
 		}
 	}
 
-	public final function asyncCheck(int $currentTick) : bool{
+	final public function asyncCheck(int $currentTick) : bool{
 		if(!$this->asyncComplete){
 			if($this->pauseTimeout !== null and $this->pauseTimeout < $currentTick){
 				// paused but timed out
@@ -185,8 +186,8 @@ abstract class Event{
 		if(!$this->async){
 			throw new \InvalidStateException("Could not pause non-async event; only events called with PluginManager->callAsyncEvent() can be paused");
 		}
-		if($ticks > 1200){
-			throw new \OutOfRangeException("Events must not be paused for more than 1200 ticks");
+		if($ticks > Event::MAX_PAUSE_TICKS){
+			throw new \OutOfRangeException("Events must not be paused for more than " . Event::MAX_PAUSE_TICKS . " ticks");
 		}
 		if($this->pauseTimeout !== null){
 			throw new \InvalidStateException("Event has already been paused");
@@ -196,7 +197,7 @@ abstract class Event{
 		$this->pauseTimeoutFunc = $onTimeout ?? [$this, "onTimeout"];
 	}
 
-	public final function continue() : void{
+	final public function continue() : void{
 		if($this->pauseTimeout === null){
 			throw new \InvalidStateException("Cannot continue a non-paused event");
 		}
@@ -216,7 +217,7 @@ abstract class Event{
 	/**
 	 * @return bool
 	 */
-	public final function isAsyncComplete() : bool{
+	final public function isAsyncComplete() : bool{
 		return $this->asyncComplete;
 	}
 }

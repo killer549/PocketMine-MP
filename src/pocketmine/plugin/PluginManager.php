@@ -720,7 +720,7 @@ class PluginManager{
 	 */
 	public static function parseDocComment(string $docComment) : array{
 		preg_match_all('/^[\t ]*\* @([a-zA-Z]+)(?:[\t ]+(.+))?[\t ]*$/m', $docComment, $matches);
-		return array_combine($matches[1], $matches[2]);
+		return array_combine($matches[1], array_map("trim", $matches[2]));
 	}
 
 	/**
@@ -774,7 +774,7 @@ class PluginManager{
 
 		$tags = self::parseDocComment((string) (new \ReflectionClass($event))->getDocComment());
 		if(isset($tags["deprecated"]) and $this->server->getProperty("settings.deprecated-verbose", true)){
-			$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecateEvent", [
+			$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecatedEvent", [
 				$plugin->getName(),
 				$event,
 				get_class($listener) . "->" . ($executor instanceof MethodEventExecutor ? $executor->getMethod() : "<unknown>")

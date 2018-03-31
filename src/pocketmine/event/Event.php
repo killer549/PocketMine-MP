@@ -220,4 +220,13 @@ abstract class Event{
 	final public function isAsyncComplete() : bool{
 		return $this->asyncComplete;
 	}
+
+
+	public function __debugInfo(){
+		$array = (array) $this;
+		unset($array["\0" . Event::class . "\0asyncQueue"],
+			$array["\0" . Event::class . "\0asyncCompleteFunc"],
+			$array["\0" . Event::class . "\0pauseTimeoutFunc"]);
+		return $array;
+	}
 }

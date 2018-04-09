@@ -82,7 +82,7 @@ namespace pocketmine {
 	const NAME = "PocketMine-MP";
 	const VERSION = "3.0.0dev";
 
-	const MIN_PHP_VERSION = "7.2.0RC3";
+	const MIN_PHP_VERSION = "7.2.0";
 
 	function critical_error($message){
 		echo "[ERROR] $message" . PHP_EOL;

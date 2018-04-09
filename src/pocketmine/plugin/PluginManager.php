@@ -210,6 +210,9 @@ class PluginManager{
 						continue;
 					}
 					$file = $directory . $file;
+					if(!$loader->canLoadPlugin($file)){
+						continue;
+					}
 					try{
 						$description = $loader->getPluginDescription($file);
 						if($description instanceof PluginDescription){
@@ -344,7 +347,7 @@ class PluginManager{
 	/**
 	 * Returns whether a specified API version string is considered compatible with the server's API version.
 	 *
-	 * @param string[] ...$versions
+	 * @param string ...$versions
 	 * @return bool
 	 */
 	public function isCompatibleApi(string ...$versions) : bool{

@@ -213,6 +213,9 @@ class PluginManager{
 						continue;
 					}
 					$file = $directory . $file;
+					if(!$loader->canLoadPlugin($file)){
+						continue;
+					}
 					try{
 						$description = $loader->getPluginDescription($file);
 						if($description instanceof PluginDescription){
@@ -347,7 +350,7 @@ class PluginManager{
 	/**
 	 * Returns whether a specified API version string is considered compatible with the server's API version.
 	 *
-	 * @param string[] ...$versions
+	 * @param string ...$versions
 	 * @return bool
 	 */
 	public function isCompatibleApi(string ...$versions) : bool{
@@ -807,7 +810,7 @@ class PluginManager{
 
 		$tags = self::parseDocComment((string) (new \ReflectionClass($event))->getDocComment());
 		if(isset($tags["deprecated"]) and $this->server->getProperty("settings.deprecated-verbose", true)){
-			$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecateEvent", [
+			$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecatedEvent", [
 				$plugin->getName(),
 				$event,
 				get_class($listener) . "->" . ($executor instanceof MethodEventExecutor ? $executor->getMethod() : "<unknown>")

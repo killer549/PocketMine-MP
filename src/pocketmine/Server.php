@@ -1918,7 +1918,6 @@ class Server{
 		}
 
 		if(!$forceSync and !$immediate){
-			var_dump("async prepare of " . strlen($payload->buffer) . " bytes");
 			$this->getScheduler()->scheduleAsyncTask(new CompressBatchedTask($batch, $payload->buffer, $compressionLevel, $sessions));
 		}else{
 			$batch->setBuffer($payload->compress($this->networkCompressionLevel));

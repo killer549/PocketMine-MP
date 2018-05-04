@@ -211,7 +211,6 @@ class Server{
 	/** @var Network */
 	private $network;
 
-	private $networkCompressionAsync = true;
 	public $networkCompressionLevel = 7;
 
 	private $autoTickRate = true;
@@ -1512,7 +1511,6 @@ class Server{
 				$this->logger->warning("Invalid network compression level $this->networkCompressionLevel set, setting to default 7");
 				$this->networkCompressionLevel = 7;
 			}
-			$this->networkCompressionAsync = $this->getProperty("network.async-compression", true);
 
 			$this->autoTickRate = (bool) $this->getProperty("level-settings.auto-tick-rate", true);
 			$this->autoTickRateLimit = (int) $this->getProperty("level-settings.auto-tick-rate-limit", 20);

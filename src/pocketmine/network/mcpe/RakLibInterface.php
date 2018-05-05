@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe;
 
-use pocketmine\network\AdvancedSourceInterface;
+use pocketmine\network\AdvancedNetworkInterface;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\Network;
 use pocketmine\Server;
@@ -34,7 +34,7 @@ use raklib\server\ServerHandler;
 use raklib\server\ServerInstance;
 use raklib\utils\InternetAddress;
 
-class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
+class RakLibInterface implements ServerInstance, AdvancedNetworkInterface{
 	/**
 	 * Sometimes this gets changed when the MCPE-layer protocol gets broken to the point where old and new can't
 	 * communicate. It's important that we check this to avoid catastrophes.
@@ -69,11 +69,11 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		$this->interface = new ServerHandler($this->rakLib, $this);
 	}
 
-	public function start(){
+	public function start() : void{
 		$this->rakLib->start();
 	}
 
-	public function setNetwork(Network $network){
+	public function setNetwork(Network $network) : void{
 		$this->network = $network;
 	}
 
@@ -102,11 +102,11 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		$this->interface->closeSession($session->getSessionIdentifier(), $reason);
 	}
 
-	public function shutdown(){
+	public function shutdown() : void{
 		$this->interface->shutdown();
 	}
 
-	public function emergencyShutdown(){
+	public function emergencyShutdown() : void{
 		$this->interface->emergencyShutdown();
 	}
 
@@ -130,11 +130,11 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		}
 	}
 
-	public function blockAddress(string $address, int $timeout = 300){
+	public function blockAddress(string $address, int $timeout = 300) : void{
 		$this->interface->blockAddress($address, $timeout);
 	}
 
-	public function unblockAddress(string $address){
+	public function unblockAddress(string $address) : void{
 		$this->interface->unblockAddress($address);
 	}
 
@@ -150,7 +150,7 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 
 	}
 
-	public function setName(string $name){
+	public function setName(string $name) : void{
 		$info = $this->server->getQueryInformation();
 
 		$this->interface->sendOption("name", implode(";",

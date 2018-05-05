@@ -27,28 +27,33 @@ declare(strict_types=1);
 namespace pocketmine\network;
 
 /**
- * Source interfaces are network implementations which players can connect through. Network implementations must
- * implement this interface in order to be registered in the server Network and process connections.
+ * Network interfaces are transport layers which can be used to transmit packets between the server and clients.
  */
-interface SourceInterface{
+interface NetworkInterface{
 
 	/**
 	 * Performs actions needed to start the interface after it is registered.
 	 */
-	public function start();
+	public function start() : void;
 
 	/**
 	 * @param string $name
 	 */
-	public function setName(string $name);
+	public function setName(string $name) : void;
 
 	/**
 	 * Called every tick to process events on the interface.
 	 */
 	public function process() : void;
 
-	public function shutdown();
+	/**
+	 * Gracefully shuts down the network interface.
+	 */
+	public function shutdown() : void;
 
-	public function emergencyShutdown();
+	/**
+	 * Shuts down the network interface in an emergency situation, such as due to a crash.
+	 */
+	public function emergencyShutdown() : void;
 
 }

@@ -39,10 +39,10 @@ class Network{
 	/** @var Server */
 	private $server;
 
-	/** @var SourceInterface[] */
+	/** @var NetworkInterface[] */
 	private $interfaces = [];
 
-	/** @var AdvancedSourceInterface[] */
+	/** @var AdvancedNetworkInterface[] */
 	private $advancedInterfaces = [];
 
 	private $upload = 0;
@@ -77,7 +77,7 @@ class Network{
 	}
 
 	/**
-	 * @return SourceInterface[]
+	 * @return NetworkInterface[]
 	 */
 	public function getInterfaces() : array{
 		return $this->interfaces;
@@ -103,14 +103,14 @@ class Network{
 	}
 
 	/**
-	 * @param SourceInterface $interface
+	 * @param NetworkInterface $interface
 	 */
-	public function registerInterface(SourceInterface $interface){
+	public function registerInterface(NetworkInterface $interface){
 		$this->server->getPluginManager()->callEvent($ev = new NetworkInterfaceRegisterEvent($interface));
 		if(!$ev->isCancelled()){
 			$interface->start();
 			$this->interfaces[$hash = spl_object_hash($interface)] = $interface;
-			if($interface instanceof AdvancedSourceInterface){
+			if($interface instanceof AdvancedNetworkInterface){
 				$this->advancedInterfaces[$hash] = $interface;
 				$interface->setNetwork($this);
 			}
@@ -119,9 +119,9 @@ class Network{
 	}
 
 	/**
-	 * @param SourceInterface $interface
+	 * @param NetworkInterface $interface
 	 */
-	public function unregisterInterface(SourceInterface $interface){
+	public function unregisterInterface(NetworkInterface $interface){
 		$this->server->getPluginManager()->callEvent(new NetworkInterfaceUnregisterEvent($interface));
 		unset($this->interfaces[$hash = spl_object_hash($interface)], $this->advancedInterfaces[$hash]);
 	}

@@ -77,13 +77,8 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		$this->network = $network;
 	}
 
-	public function process() : bool{
-		$work = false;
-		if($this->interface->handlePacket()){
-			$work = true;
-			while($this->interface->handlePacket()){
-			}
-		}
+	public function process() : void{
+		while($this->interface->handlePacket()){}
 
 		foreach($this->sessions as $session){
 			$session->tick();
@@ -92,8 +87,6 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		if(!$this->rakLib->isRunning() and !$this->rakLib->isShutdown()){
 			throw new \Exception("RakLib Thread crashed");
 		}
-
-		return $work;
 	}
 
 	public function closeSession(string $identifier, string $reason) : void{

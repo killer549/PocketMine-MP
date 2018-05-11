@@ -1666,10 +1666,12 @@ class Level implements ChunkManager, Metadatable{
 		}
 
 		$drops = [];
-		$xpDrop = 0;
-
-		if($player !== null and !$player->isCreative()){
+		if($player === null or !$player->isCreative()){
 			$drops = array_merge(...array_map(function(Block $block) use ($item) : array{ return $block->getDrops($item); }, $affectedBlocks));
+		}
+
+		$xpDrop = 0;
+		if($player !== null and !$player->isCreative()){
 			$xpDrop = array_sum(array_map(function(Block $block) use ($item) : int{ return $block->getXpDropForTool($item); }, $affectedBlocks));
 		}
 
@@ -1716,7 +1718,7 @@ class Level implements ChunkManager, Metadatable{
 			$this->destroyBlockInternal($t, $item, $player, $createParticles);
 		}
 
-		$item->useOn($target);
+		$item->onDestroyBlock($target);
 
 		if(!empty($drops)){
 			$dropPos = $target->add(0.5, 0.5, 0.5);

@@ -40,6 +40,7 @@ use pocketmine\event\level\LevelInitEvent;
 use pocketmine\event\level\LevelLoadEvent;
 use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\event\player\PlayerDataSaveEvent;
+use pocketmine\event\server\DataPacketBroadcastEvent;
 use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\event\server\ServerCommandEvent;
 use pocketmine\inventory\CraftingManager;
@@ -1861,6 +1862,11 @@ class Server{
 			throw new \InvalidArgumentException("Tried to broadcast empty list of packets");
 		}
 
+		$this->pluginManager->callEvent($ev = new DataPacketBroadcastEvent($players, $packets));
+		if($ev->isCancelled()){
+			return;
+		}
+
 		/** @var IPlayerNetworkSession[] $sessions */
 		$sessions = [];
 		foreach($players as $player){
@@ -1871,8 +1877,6 @@ class Server{
 		if(empty($sessions)){
 			return;
 		}
-
-		//TODO: packet broadcast events
 
 		$length = 0;
 		foreach($packets as $packet){
@@ -1893,8 +1897,8 @@ class Server{
 		}else{
 			foreach($sessions as $player){
 				foreach($packets as $packet){
-					//FIXME: this is going to spam DataPacketSendEvent, which won't be desirable after we have broadcast events
-					$player->sendDataPacket($packet, $immediate);
+					//don't fire DataPacketSendEvent for this
+					$player->sendDataPacket($packet, $immediate, false);
 				}
 			}
 		}

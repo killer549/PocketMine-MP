@@ -3058,16 +3058,13 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 				}
 				$this->hiddenPlayers = [];
 
-
 				$this->removeAllWindows(true);
 				$this->windows = [];
 				$this->windowIndex = [];
 				$this->cursorInventory = null;
 				$this->craftingGrid = null;
+				parent::close();
 
-				if($this->constructed){
-					parent::close();
-				}
 				$this->spawned = false;
 
 				$this->server->removeOnlinePlayer($this);

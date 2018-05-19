@@ -21,22 +21,27 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\entity;
+namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\event\entity\EntityDamageEvent;
+#include <rules/DataPacket.h>
 
-abstract class WaterAnimal extends Creature implements Ageable{
+use pocketmine\network\mcpe\handler\NetworkHandler;
 
-	public function isBaby() : bool{
-		return $this->getGenericFlag(self::DATA_FLAG_BABY);
+class RemoveObjectivePacket extends DataPacket{
+	public const NETWORK_ID = ProtocolInfo::REMOVE_OBJECTIVE_PACKET;
+
+	/** @var string */
+	public $objectiveName;
+
+	protected function decodePayload(){
+		$this->objectiveName = $this->getString();
 	}
 
-	public function canBreathe() : bool{
-		return $this->isInsideOfWater();
+	protected function encodePayload(){
+		$this->putString($this->objectiveName);
 	}
 
-	public function onAirExpired() : void{
-		$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_SUFFOCATION, 2);
-		$this->attack($ev);
+	public function handle(NetworkHandler $handler) : bool{
+		return $handler->handleRemoveObjective($this);
 	}
 }

@@ -846,15 +846,6 @@ class Level implements ChunkManager, Metadatable{
 		$this->sleepTicks = $ticks;
 	}
 
-	public function sendBlockExtraData(int $x, int $y, int $z, int $id, int $data, array $targets = null){
-		$pk = new LevelEventPacket;
-		$pk->evid = LevelEventPacket::EVENT_SET_DATA;
-		$pk->position = new Vector3($x, $y, $z);
-		$pk->data = ($data << 8) | $id;
-
-		$this->server->broadcastPacket($targets ?? $this->getChunkPlayers($x >> 4, $z >> 4), $pk);
-	}
-
 	/**
 	 * @param Player[] $target
 	 * @param Block[]  $blocks
@@ -989,8 +980,7 @@ class Level implements ChunkManager, Metadatable{
 		foreach($this->chunkTickList as $index => $loaders){
 			Level::getXZ($index, $chunkX, $chunkZ);
 
-
-			if(!isset($this->chunks[$index]) or ($chunk = $this->getChunk($chunkX, $chunkZ, false)) === null){
+			if(($chunk = $this->chunks[$index] ?? null) === null){
 				unset($this->chunkTickList[$index]);
 				continue;
 			}elseif($loaders <= 0){
@@ -1109,13 +1099,12 @@ class Level implements ChunkManager, Metadatable{
 	 * @return Block[]
 	 */
 	public function getCollisionBlocks(AxisAlignedBB $bb, bool $targetFirst = false) : array{
-		$bbPlusOne = $bb->grow(1, 1, 1);
-		$minX = Math::floorFloat($bbPlusOne->minX);
-		$minY = Math::floorFloat($bbPlusOne->minY);
-		$minZ = Math::floorFloat($bbPlusOne->minZ);
-		$maxX = Math::ceilFloat($bbPlusOne->maxX);
-		$maxY = Math::ceilFloat($bbPlusOne->maxY);
-		$maxZ = Math::ceilFloat($bbPlusOne->maxZ);
+		$minX = Math::floorFloat($bb->minX - 1);
+		$minY = Math::floorFloat($bb->minY - 1);
+		$minZ = Math::floorFloat($bb->minZ - 1);
+		$maxX = Math::ceilFloat($bb->maxX + 1);
+		$maxY = Math::ceilFloat($bb->maxY + 1);
+		$maxZ = Math::ceilFloat($bb->maxZ + 1);
 
 		$collides = [];
 
@@ -1173,13 +1162,12 @@ class Level implements ChunkManager, Metadatable{
 	 * @return AxisAlignedBB[]
 	 */
 	public function getCollisionCubes(Entity $entity, AxisAlignedBB $bb, bool $entities = true) : array{
-		$bbPlusOne = $bb->grow(1, 1, 1);
-		$minX = Math::floorFloat($bbPlusOne->minX);
-		$minY = Math::floorFloat($bbPlusOne->minY);
-		$minZ = Math::floorFloat($bbPlusOne->minZ);
-		$maxX = Math::ceilFloat($bbPlusOne->maxX);
-		$maxY = Math::ceilFloat($bbPlusOne->maxY);
-		$maxZ = Math::ceilFloat($bbPlusOne->maxZ);
+		$minX = Math::floorFloat($bb->minX - 1);
+		$minY = Math::floorFloat($bb->minY - 1);
+		$minZ = Math::floorFloat($bb->minZ - 1);
+		$maxX = Math::ceilFloat($bb->maxX + 1);
+		$maxY = Math::ceilFloat($bb->maxY + 1);
+		$maxZ = Math::ceilFloat($bb->maxZ + 1);
 
 		$collides = [];
 
@@ -1308,7 +1296,7 @@ class Level implements ChunkManager, Metadatable{
 		return $this->getChunk($x >> 4, $z >> 4, false)->getFullBlock($x & 0x0f, $y, $z & 0x0f);
 	}
 
-	public function isInWorld(float $x, float $y, float $z) : bool{
+	public function isInWorld(int $x, int $y, int $z) : bool{
 		return (
 			$x <= INT32_MAX and $x >= INT32_MIN and
 			$y < $this->worldHeight and $y >= 0 and
@@ -2127,34 +2115,6 @@ class Level implements ChunkManager, Metadatable{
 		foreach($this->getChunkLoaders($x >> 4, $z >> 4) as $loader){
 			$loader->onBlockChanged($v);
 		}
-	}
-
-	/**
-	 * Gets the raw block extra data
-	 *
-	 * @param int $x
-	 * @param int $y
-	 * @param int $z
-	 *
-	 * @return int 16-bit
-	 */
-	public function getBlockExtraDataAt(int $x, int $y, int $z) : int{
-		return $this->getChunk($x >> 4, $z >> 4, true)->getBlockExtraData($x & 0x0f, $y, $z & 0x0f);
-	}
-
-	/**
-	 * Sets the raw block metadata.
-	 *
-	 * @param int $x
-	 * @param int $y
-	 * @param int $z
-	 * @param int $id
-	 * @param int $data
-	 */
-	public function setBlockExtraDataAt(int $x, int $y, int $z, int $id, int $data){
-		$this->getChunk($x >> 4, $z >> 4, true)->setBlockExtraData($x & 0x0f, $y, $z & 0x0f, ($data << 8) | $id);
-
-		$this->sendBlockExtraData($x, $y, $z, $id, $data);
 	}
 
 	/**

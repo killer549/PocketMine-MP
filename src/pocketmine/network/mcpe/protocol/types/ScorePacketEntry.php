@@ -21,22 +21,15 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\entity;
+namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\utils\UUID;
 
-abstract class WaterAnimal extends Creature implements Ageable{
-
-	public function isBaby() : bool{
-		return $this->getGenericFlag(self::DATA_FLAG_BABY);
-	}
-
-	public function canBreathe() : bool{
-		return $this->isInsideOfWater();
-	}
-
-	public function onAirExpired() : void{
-		$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_SUFFOCATION, 2);
-		$this->attack($ev);
-	}
+class ScorePacketEntry{
+	/** @var UUID */
+	public $uuid;
+	/** @var string */
+	public $objectiveName;
+	/** @var int */
+	public $score;
 }

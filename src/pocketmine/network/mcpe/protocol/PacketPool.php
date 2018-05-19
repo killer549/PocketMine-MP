@@ -137,6 +137,11 @@ class PacketPool{
 		static::registerPacket(new ServerSettingsResponsePacket());
 		static::registerPacket(new ShowProfilePacket());
 		static::registerPacket(new SetDefaultGameTypePacket());
+		static::registerPacket(new RemoveObjectivePacket());
+		static::registerPacket(new SetDisplayObjectivePacket());
+		static::registerPacket(new SetScorePacket());
+		static::registerPacket(new LabTablePacket());
+		static::registerPacket(new UpdateBlockSyncedPacket());
 
 	}
 

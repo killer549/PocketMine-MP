@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "401dbada37e501304f05b0f1fa818953",
+    "content-hash": "bea9dac3cf80f85763e734efd831cd51",
     "packages": [
         {
             "name": "pocketmine/binaryutils",
@@ -113,16 +113,16 @@
         },
         {
             "name": "pocketmine/raklib",
-            "version": "0.11.0",
+            "version": "dev-resend-cap",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/RakLib.git",
-                "reference": "1da1b4c6cc6bd5337ce5e468d22bbb013ae02b43"
+                "reference": "ca9e220dcc2211406a97b5a0373fadd85c63d298"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/RakLib/zipball/1da1b4c6cc6bd5337ce5e468d22bbb013ae02b43",
-                "reference": "1da1b4c6cc6bd5337ce5e468d22bbb013ae02b43",
+                "url": "https://api.github.com/repos/pmmp/RakLib/zipball/ca9e220dcc2211406a97b5a0373fadd85c63d298",
+                "reference": "ca9e220dcc2211406a97b5a0373fadd85c63d298",
                 "shasum": ""
             },
             "require": {
@@ -144,10 +144,10 @@
             ],
             "description": "A RakNet server implementation written in PHP",
             "support": {
-                "source": "https://github.com/pmmp/RakLib/tree/0.11.0",
+                "source": "https://github.com/pmmp/RakLib/tree/0.11",
                 "issues": "https://github.com/pmmp/RakLib/issues"
             },
-            "time": "2018-04-13T19:05:24+00:00"
+            "time": "2018-05-20T19:22:11+00:00"
         },
         {
             "name": "pocketmine/spl",
@@ -186,7 +186,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ext-pthreads": 20
+        "ext-pthreads": 20,
+        "pocketmine/raklib": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

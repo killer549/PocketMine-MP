@@ -21,7 +21,7 @@
       "ext-yaml": ">=2.0.0",
       "ext-zip": "*",
       "ext-zlib": ">=1.2.11",
-      "pocketmine/raklib": "0.11.0",
+      "pocketmine/raklib": "dev-resend-cap#ca9e220dcc2211406a97b5a0373fadd85c63d298",
       "pocketmine/spl": "0.3.0",
       "pocketmine/binaryutils": "0.0.1",
       "pocketmine/nbt": "0.1.0",
